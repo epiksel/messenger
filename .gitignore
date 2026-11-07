@@ -1,0 +1,10 @@
+# IDE Project files
+/.idea/*
+/.DS_Store
+/.cache
+/.php-cs-fixer.cache
+/.claude
+
+# ENV
+.env
+.env.docker

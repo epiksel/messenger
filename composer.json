@@ -1,0 +1,31 @@
+{
+  "name": "epiksel/messenger",
+  "description": "A messenger library ready for a multi-social network infrastructure",
+  "type": "library",
+  "keywords": [
+    "messenger",
+    "telegram",
+    "whatsapp",
+    "facebook",
+    "instagram",
+    "twitter"
+  ],
+  "license": "Apache-2.0 WITH Commons-Clause",
+  "homepage": "https://epiksel.net",
+  "support": {
+    "issues": "https://github.com/epiksel/messenger/issues",
+    "source": "https://github.com/epiksel/messenger/releases",
+    "docs": "https://github.com/epiksel/messenger"
+  },
+  "require": {
+    "php": ">=8.3",
+    "guzzlehttp/guzzle": "^8.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "MyMessenger\\": "src/"
+    }
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true
+}
