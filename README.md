@@ -1,32 +1,34 @@
-# My Messenger
+# MyMessenger
 
 A platform-agnostic, multi-network-ready PHP messaging library.
-Send messages, photos, documents, video, audio, location, and contacts through a single interface — starting with Telegram (WhatsApp, Facebook, Instagram, and more coming soon).
 
 - **PHP ≥ 8.3**
 - **Guzzle ≥ 8.0**
 - **PSR-4 namespace:** `MyMessenger\`
 
-## 📦 Installation
+## Installation
 
 ```bash
 composer require epiksel/messenger
-composer install
 ```
+
+## Providers
+
+- [Telegram](src/Provider/Telegram/README.md)
+- [WhatsApp](src/Provider/WhatsApp/README.md)
+- [Facebook Messenger](src/Provider/Facebook/README.md)
+- [NetGSM](src/Provider/NetGsm/README.md)
 
 ## 🚀 Basic Usage
 
 ### 1. Create a Messenger
 
 ```php
-<?php
-
 use MyMessenger\Core\MessengerFactory;
 
-// Simple: credentials as an array
 $messenger = MessengerFactory::make(
-    'telegram',
-    ['token' => 'BOT_TOKEN'],
+    'telegram', // or 'whatsapp', 'facebook', 'netgsm'
+    ['token' => 'YOUR_TOKEN'],
     [
         'timeout'          => 10,
         'connect_timeout'  => 5,
@@ -38,7 +40,7 @@ $messenger = MessengerFactory::make(
 // Or via a CredentialProviderInterface
 use MyMessenger\Credentials\ArrayCredentialProvider;
 
-$provider  = new ArrayCredentialProvider(['telegram' => ['token' => 'BOT_TOKEN']]);
+$provider  = new ArrayCredentialProvider(['telegram' => ['token' => 'YOUR_TOKEN']]);
 $messenger = MessengerFactory::make('telegram', $provider);
 ```
 
@@ -46,91 +48,40 @@ $messenger = MessengerFactory::make('telegram', $provider);
 
 ```php
 $result = $messenger->sendMessage(
-    '123456789',
-    'Hello, world!',
-    ['parse_mode' => 'html'],
+    'RECIPIENT_ID',
+    'Hello, world!'
 );
 
 if ($result->success) {
-    echo 'Message ID: ' . $result->messageId;
-    echo 'Raw: ' . json_encode($result->raw);
+    echo 'Message sent successfully with ID: ' . $result->messageId;
 } else {
     echo 'Error: ' . $result->error->message . ' (code: ' . $result->error->code . ')';
 }
 ```
 
-### 3. Send a Photo
+### 3. Validate Credentials
 
 ```php
-$result = $messenger->sendPhoto(
-    '123456789',
-    '/path/to/local/photo.jpg',        // or 'https://example.com/photo.jpg'
-    ['caption' => 'Here is the photo'],
-);
-```
+$validation = $messenger->validateCredentials();
 
-### 4. Validate Credentials (Recommended)
-
-Verify the token works before attempting to use it:
-
-```php
-if ($messenger instanceof \MyMessenger\Contracts\ValidatesCredentialsInterface) {
-    $validation = $messenger->validateCredentials();
-
-    if ($validation->valid) {
-        echo 'Token valid. Bot: @' . $validation->data['username'];
-    } else {
-        echo $validation->message;   // e.g., "Invalid bot token format..."
-    }
+if ($validation->valid) {
+    echo 'Token valid.';
+} else {
+    echo $validation->message;
 }
 ```
 
-### 5. Validate Recipient
-
-Verify that the Chat ID exists and the bot has permissions:
+### 4. Validate Recipient
 
 ```php
-if ($messenger instanceof \MyMessenger\Contracts\ValidatesCredentialsInterface) {
-    $validation = $messenger->validateRecipient(
-        'recipient_chat_id',
-        ['send_test_message' => true, 'test_message' => '✅ Test Connection']
-    );
+$validation = $messenger->validateRecipient('RECIPIENT_ID');
 
-    if ($validation->valid) {
-        echo 'Chat verified: ' . $validation->data['title'];
-    } else {
-        echo $validation->message;
-    }
+if ($validation->valid) {
+    echo 'Recipient valid.';
+} else {
+    echo $validation->message;
 }
 ```
-
-## 📡 Supported Operations (Capabilities)
-
-The library supports the following operations (varies by platform):
-
-- `send_message`
-- `send_photo`
-- `send_document`
-- `send_video`
-- `send_audio`
-- `send_location`
-- `send_contact`
-- `edit_message`
-- `delete_message`
-- `send_chat_action`
-- `get_me`
-- `get_account_info`
-- `set_webhook`
-- `delete_webhook`
-- `get_webhook_info`
-- `get_updates`
-- `answer_callback_query`
-- `get_chat`
-- `get_chat_member`
-- `pin_message`
-- `unpin_message`
-- `forward_message`
-- `copy_message`
 
 ## ⚖️ License & Commercial Use
 
