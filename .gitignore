@@ -3,7 +3,10 @@
 /.DS_Store
 /.cache
 /.php-cs-fixer.cache
+
+# AI Agents
 /.claude
+/.cptr
 
 # ENV
 .env
