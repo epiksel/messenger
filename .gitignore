@@ -11,3 +11,6 @@
 # ENV
 .env
 .env.docker
+
+# Composer dependencies (installed with `composer install`)
+/vendor/
